@@ -10,7 +10,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         docker.vm.provider :virtualbox do |vb|
             vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
         end
-        config.vm.synced_folder "/Users/sgillis", "/Users/sgillis",
+        config.vm.synced_folder "/Users/maartenhuijsmans", "/Users/maartenhuijsmans",
             :nfs => true,
             :linux__nfs_options => ["no_root_squash"], :map_uid => 0, :map_gid => 0
         $script = <<SCRIPT
