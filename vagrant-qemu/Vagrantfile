@@ -1,0 +1,21 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    config.vm.box = "ubuntu/trusty64"
+    config.vm.network "private_network", ip: "10.2.0.11", netmask: "255.255.0.0"
+    #config.vm.network "public_network"
+
+    config.vm.provision "docker" do |d|
+        #d.build_image "/vagrant"
+    end
+
+    config.vm.provision "shell", inline: <<SCRIPT
+        echo 'cd /vagrant' >> /home/vagrant/.profile
+        sudo apt-get install qemu binfmt-support qemu-user-static -y
+SCRIPT
+
+end

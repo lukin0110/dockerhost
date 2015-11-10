@@ -1,3 +1,5 @@
 .vagrant/*
 .idea/*
 vagrant-lukin0110/.vagrant/*
+vagrant-qemu/.vagrant/*
+
