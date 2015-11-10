@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    config.vm.define :docker do |docker|
+        docker.vm.box = "ubuntu/trusty64"
+        docker.vm.network "private_network", ip: "10.2.0.10", netmask: "255.255.0.0"
+        docker.vm.provider :virtualbox do |vb|
+            vb.customize ["modifyvm", :id, "--memory", "1024", "--nicpromisc2", "allow-all"]
+        end
+        config.vm.synced_folder "/Users/maartenhuijsmans", "/Users/maartenhuijsmans",
+            :nfs => true,
+            :linux__nfs_options => ["no_root_squash"], :map_uid => 0, :map_gid => 0
+
+        $script = <<SCRIPT
+apt-get update -qq
+apt-get upgrade
+
+# https://docs.docker.com/installation/ubuntulinux/#ubuntu-trusty-1404-lts-64-bit
+# curl -sSL https://get.docker.com/gpg | apt-key add -
+curl -sSL https://get.docker.com/ | sh
+
+usermod -a -G docker vagrant
+echo 'DOCKER_OPTS="-H 0.0.0.0:4243"' >> /etc/default/docker
+
+echo '# Set DOCKER_HOST' >> /home/vagrant/.bashrc
+echo 'export DOCKER_HOST="tcp://127.0.0.1:4243"' >> /home/vagrant/.bashrc
+service docker restart
+SCRIPT
+
+       docker.vm.provision :shell, :inline => $script
+    end
+end
