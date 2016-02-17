@@ -52,6 +52,8 @@ docker info
 ```
 
 ## Troubleshooting
+
+### Oversized
 When executing `docker ps` you might receive the following error (or similar):
 
 ```
@@ -74,3 +76,24 @@ unset DOCKER_TLS_VERIFY
 ```
 
 Now source your bash config again: `source ~/.bash_profile`.
+
+### Failed to mount
+```
+Failed to mount folders in Linux guest. This is usually because
+the "vboxsf" file system is not available. Please verify that
+the guest additions are properly installed in the guest and
+can work properly. The command attempted was:
+
+mount -t vboxsf -o uid=`id -u vagrant`,gid=`getent group vagrant | cut -d: -f3` vagrant /vagrant
+mount -t vboxsf -o uid=`id -u vagrant`,gid=`id -g vagrant` vagrant /vagrant
+
+The error output from the last command was:
+
+stdin: is not a tty
+```
+
+Solution: install the [vagrant vbguest plugin](http://stackoverflow.com/a/23752848/761855)
+```
+$ vagrant plugin install vagrant-vbguest
+```
+
